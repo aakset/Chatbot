@@ -20,13 +20,8 @@ app.post("/login", (req, res) => {
   return res.json({ message: "Login successful", user });
 });
 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
-});
 
-
-// ... CHATGPT based MongoDB injection
-
+// ... CHATGPT corrected MongoDB injection
 const mongoose = require('mongoose');
 
 mongoose.connect('mongodb://localhost:27017/chatbotdb', {
@@ -48,7 +43,11 @@ const messageSchema = new mongoose.Schema({
   timestamp: Date,
 });
 
-const Message = mongoose.model('Message', messageSchema);
+//const Message = mongoose.model('Message', messageSchema);
+
+//app.get("/", function (_, resp){
+//await Message.find({ size: 'small' }).where('createdDate').gt(oneYearAgo).exec();
+//})
 
 // ... Continue with the rest of your server code
 
