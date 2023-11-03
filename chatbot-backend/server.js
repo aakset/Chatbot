@@ -1,29 +1,12 @@
 const express = require("express");
 const app = express();
 const port = 4444;
-
-app.use(express.json());
-app.use(express.urlencoded());
-
-// Demo User
-const users = [{ username: "user1" }, { username: "user2" }];
-
-app.post("/login", (req, res) => {
-  const { username } = req.body;
-
-  const user = users.find((user) => user.username === username);
-
-  if (!user) {
-    return res.status(404).json({ message: "User not found" });
-  }
-
-  return res.json({ message: "Login successful", user });
-});
-
-
-// ... CHATGPT corrected MongoDB injection
 const mongoose = require('mongoose');
 
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// MongoDB Verbindung
 mongoose.connect('mongodb://localhost:27017/chatbotdb', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
@@ -36,22 +19,34 @@ db.once('open', () => {
   console.log('Connected to MongoDB');
 });
 
-// Define a schema and model for your messages collection
 const messageSchema = new mongoose.Schema({
   username: String,
   message: String,
   timestamp: Date,
 });
 
-//const Message = mongoose.model('Message', messageSchema);
+const Message = mongoose.model('Message', messageSchema);
 
-//app.get("/", function (_, resp){
-//await Message.find({ size: 'small' }).where('createdDate').gt(oneYearAgo).exec();
-//})
 
-// ... Continue with the rest of your server code
+app.post("/login", (req, res) => {
+  const { username } = req.body;
+  if (username) {
+    return res.json({ message: "Login successful", username });
+  } else {
+    return res.status(404).json({ message: "User not found" });
+  }
+});
 
+// Save message endpoint
+app.post("/saveMessage", async (req, res) => {
+  const { username, message } = req.body;
+  // Save the message to the database
+  const newMessage = new Message({ username, message, timestamp: new Date() });
+  await newMessage.save();
+  return res.json({ message: "Message saved" });
+});
+
+// Start the server
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });
-
