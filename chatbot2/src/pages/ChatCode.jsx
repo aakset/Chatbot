@@ -1,7 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react';
-import '../style/chat.css';
+import '../style/ChatCode.css';
 
 const Chatbot = () => {
+  // Inside your Chatbot component
+  const [chatCount, setChatCount] = useState(1);
+
+  const resetChat = () => {
+  setConversation([]);
+  setChatCount((prevCount) => prevCount + 1);
+  };
+
   const [input, setInput] = useState('');
   const [conversation, setConversation] = useState([]);
   const [responses, setResponses] = useState([
@@ -44,7 +52,15 @@ const Chatbot = () => {
     }
   }, [conversation]);
 
+
+  
+
+
   return (
+    <div>
+        <button onClick={resetChat} className="new-chat-button">
+          New Chat
+        </button>
     <div className="chat-container">
       <h1>Chatbot</h1>
       <div className="chat">
@@ -68,6 +84,7 @@ const Chatbot = () => {
         />
         <button onClick={handleSend}>Send</button>
       </div>
+    </div>
     </div>
   );
 };
