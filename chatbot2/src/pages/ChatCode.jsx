@@ -1,90 +1,64 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import '../style/ChatCode.css';
 
 const Chatbot = () => {
-  // Inside your Chatbot component
-  const [chatCount, setChatCount] = useState(1);
-
-  const resetChat = () => {
-  setConversation([]);
-  setChatCount((prevCount) => prevCount + 1);
-  };
-
-  const [input, setInput] = useState('');
-  const [conversation, setConversation] = useState([]);
-  const [responses, setResponses] = useState([
-    "Yes",
-    "No",
-    "I guess",
-    "I don't think so..",
-    "seriously? I don't answer stupid questions.."
-  ]);
-
-  const messagesContainerRef = useRef(null);
-
-  const getRandomResponse = () => {
-    const randomIndex = Math.floor(Math.random() * responses.length);
-    return responses[randomIndex];
-  };
-
-  const handleSend = () => {
-    if (input) {
-      const userMessage = {
-        text: input,
-        type: 'user',
-      };
-
-      const botResponse = getRandomResponse();
-      const botMessage = {
-        text: botResponse,
-        type: 'bot',
-      };
-
-      setConversation([...conversation, userMessage, botMessage]);
-      setInput('');
-    }
-  };
+  const [messages, setMessages] = useState([]);
+  const chatContainerRef = useRef(null);
 
   useEffect(() => {
-    if (messagesContainerRef.current) {
-      // Scroll to the bottom when a new message is added
-      messagesContainerRef.current.scrollTop = messagesContainerRef.current.scrollHeight;
+    // Scrollen bei neuen nachrichten
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
     }
-  }, [conversation]);
+  }, [messages]);
 
+  const handleUserMessage = (message) => {
+    const newMessage = { text: message, type: 'user' };
+    setMessages((prevMessages) => [...prevMessages, newMessage]);
+    setTimeout(() => {
+      handleBotResponse();
+    }, 1000);
+  };
 
-  
+  const handleBotResponse = () => {
+    const responseOptions = ['Yes', 'No', 'Probably', 'I don\'t think so', 'Definitely', 'Maybe', 'Ask again later... I\'m busy contemplating'];
+    const randomIndex = Math.floor(Math.random() * responseOptions.length);
+    const botResponse = responseOptions[randomIndex];
+    const newMessage = { text: botResponse, type: 'bot' };
+    setMessages((prevMessages) => [...prevMessages, newMessage]);
+  };
 
+  const handleClearChat = () => {
+    setMessages([]);
+  };
 
   return (
-    <div>
-        <button onClick={resetChat} className="new-chat-button">
-          New Chat
-        </button>
-    <div className="chat-container">
-      <h1>Chatbot</h1>
-      <div className="chat">
-        <div className="messages" ref={messagesContainerRef}>
-          {conversation.map((message, index) => (
-            <div
-              key={index}
-              className={`message ${message.type === 'user' ? 'right' : 'left'}`}
-            >
-              <p>{message.text}</p>
-            </div>
-          ))}
-        </div>
+    <div className="chatbot-container">
+      <div className="chatbot" ref={chatContainerRef}>
+        {messages.map((msg, index) => (
+          <div
+            key={index}
+            className={`message ${msg.type === 'user' ? 'user-message' : 'bot-message'}`}
+          >
+            {msg.text}
+          </div>
+        ))}
       </div>
-      <div className="textfield">
+      <div className="input-container">
         <input
           type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder="Type a question.."
+          placeholder="Type your message..."
+          onKeyPress={(e) => {
+            if (e.key === 'Enter') {
+              handleUserMessage(e.target.value);
+              e.target.value = '';
+            }
+          }}
         />
-        <button onClick={handleSend}>Send</button>
+        <button className="clear-button" onClick={handleClearChat}>
+          Clear Chat
+        </button>
       </div>
-    </div>
     </div>
   );
 };

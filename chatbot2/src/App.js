@@ -1,12 +1,16 @@
+import { Route, Routes } from 'react-router-dom';
 import './App.css';
 import Chatbot from './pages/ChatCode';
+import About from './pages/About';
 
 function App() {
   return (
-    <div className="App">
-        <Chatbot />
-    </div>
-  );
+  <Routes>
+    <Route path="/" element={<Chatbot />}/>
+    <Route path="/about" element={<About />}/>
+  </Routes>
+
+)
 }
 
 export default App;
