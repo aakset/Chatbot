@@ -1,41 +1,113 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const mongoose = require("mongoose");
 
 const app = express();
 const PORT = 3001;
 
+mongoose.connect("mongodb://localhost:27017/chat-app", {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+const db = mongoose.connection;
+
+db.on('error', (error) => {
+  console.error('MongoDB connection error:', error);
+});
+
+db.once('open', () => {
+  console.log('Connected to MongoDB');
+});
+const userSchema = new mongoose.Schema({
+  username: String,
+  chats: [
+    {
+      sender: String,
+      message: String,
+    },
+  ],
+});
+
+const User = db.model("users", userSchema);
+
+
 app.use(bodyParser.json());
 app.use(cors());
+app.use((req, res, next) => {
+  const { username } = req.body;
+  req.username = username;
+  next();
+});
+
+const db_user = new User()
+
+
+app.post("/saveChat", async (req, res) => {
+  const { sender, message } = req.body;
+
+  try {
+    // findet benutzer durch username
+    const user = await User.findOne({username: sender}).exec()
+
+
+    //template for later
+    if (user) {
+      let chats = user.chats
+      const updateUser = User.findOneAndUpdate({username: sender}, {chats: [...chats, {sender, message}]}).exec()
+
+      return res
+        .status(200)
+        .json({ success: true, message: "Chat saved successfully" });
+    } else {
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
+    }
+  } catch (error) {
+    console.error("Error during chat saving:", error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Internal Server Error" });
+  }
+});
 
 const users = [];
 
-app.post("/register", (req, res) => {
+app.post("/register", async (req, res) => {
   const { username } = req.body;
-
-  if (users.includes(username)) {
+try{
+    const user = await User.findOne({username: username}).exec()
+  if (user) {
     return res
       .status(400)
       .json({ success: false, message: "Username already taken" });
   } else {
-    users.push(username);
+    db_user.username = username;
+    await db_user.save()
     return res
       .status(201)
       .json({ success: true, message: "User registered successfully" });
+  }} catch (error) {
+    
+    return res
+      .status(500)
+      .json({ success: false, message: "Something went wrong" });
   }
 });
 
-app.post("/login", (req, res) => {
+app.post("/login", async (req, res) => {
   const { username } = req.body;
 
-  if (users.includes(username)) {
+    const user = await User.findOne({username: username}).exec()
+  if (user) {
     return res
       .status(200)
       .json({ success: true, message: "Login successful!" });
   } else {
     return res
       .status(401)
-      .json({ success: false, message: "Invalid username" });
+      .json({ success: false, message: "Username not found!" });
   }
 });
 
@@ -43,5 +115,5 @@ app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
 
-//ohne CORS gehts nicht!
 
+//ohne CORS gehts nicht!

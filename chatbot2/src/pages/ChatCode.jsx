@@ -1,23 +1,40 @@
 import React, { useState, useEffect, useRef } from 'react';
 import '../style/ChatCode.css';
 
-const Chatbot = () => {
+const Chatbot = ({user}) => {
   const [messages, setMessages] = useState([]);
   const chatContainerRef = useRef(null);
+  const [username, setUsername] = useState(user); // Set the username state
 
   useEffect(() => {
-    // Scrollen bei neuen nachrichten
+    // Scroll to bottom when new messages are added
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
     }
   }, [messages]);
 
-  const handleUserMessage = (message) => {
-    const newMessage = { text: message, type: 'user' };
-    setMessages((prevMessages) => [...prevMessages, newMessage]);
-    setTimeout(() => {
-      handleBotResponse();
-    }, 1000);
+  const handleUserMessage = async (message) => {
+    try {
+      // Save user message to the backend
+      await fetch('http://localhost:3001/saveChat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ sender: username, message }),
+      });
+
+      // Update the UI with the user's message
+      const newMessage = { text: message, type: 'user' };
+      setMessages((prevMessages) => [...prevMessages, newMessage]);
+
+      // Simulate bot response after a delay
+      setTimeout(() => {
+        handleBotResponse();
+      }, 1000);
+    } catch (error) {
+      console.error('Error saving user message:', error);
+    }
   };
 
   const handleBotResponse = () => {
