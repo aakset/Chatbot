@@ -4,7 +4,6 @@ import '../style/ChatCode.css';
 const Chatbot = ({ user }) => {
   const [messages, setMessages] = useState([]);
   const chatContainerRef = useRef(null);
-  const [username, setUsername] = useState(user);
 
   const getData = async () => {
 
@@ -13,7 +12,7 @@ const Chatbot = ({ user }) => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ username }),
+      body: JSON.stringify({ username: user }),
     }).then((response) => response.json());
     setMessages(await response.chats)
 
@@ -28,7 +27,7 @@ const Chatbot = ({ user }) => {
 
   useEffect(()=> {
     getData()
-  },[])
+  },[user])
 
   const handleUserMessage = async (message) => {
     try {
@@ -47,7 +46,7 @@ const Chatbot = ({ user }) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ sender: username, message }),
+        body: JSON.stringify({ sender: user, message }),
       }).then((response) => response.json());
 
       const newMessage = { message: message, sender: 'user' };

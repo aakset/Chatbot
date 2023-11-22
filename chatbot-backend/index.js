@@ -101,13 +101,13 @@ app.post("/register", async (req, res) => {
         .status(400)
         .json({ success: false, message: "Username already taken! Try another one." });
     } else {
-      db_user.username = username;
-      await db_user.save();
+      const newUser = await User.create({username:username})
       return res
         .status(201)
         .json({ success: true, message: "User registered successfully!" });
     }
   } catch (error) {
+    console.log(error)
     return res
       .status(500)
       .json({ success: false, message: "Something went wrong... Try again later" });
