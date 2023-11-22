@@ -23,7 +23,7 @@ const LoginForm = () => {
       setMessage(data.message);
 
       if (response.ok) {
-        setIsLoggedIn(true); // Set login status to true
+        setIsLoggedIn(true); 
       }
     } catch (error) {
       console.error('Error during registration:', error);
@@ -45,7 +45,7 @@ const LoginForm = () => {
 
       if (response.ok) {
         setUsername(username);
-        setIsLoggedIn(true); // Set login status to true
+        setIsLoggedIn(true); 
       }
     } catch (error) {
       console.error('Error during login:', error);
@@ -54,7 +54,7 @@ const LoginForm = () => {
 
   return (
     <div>
-      {isLoggedIn ? ( // If logged in, render the Chatbot component
+      {isLoggedIn ? ( 
         <Chatbot user={username} />
       ) : (
         <>
@@ -64,9 +64,10 @@ const LoginForm = () => {
             placeholder="Enter your username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
+            className={message.includes("username") ? "error" : ""}
           />
-          <button onClick={handleRegister}>Register</button>
-          <button onClick={handleLogin}>Login</button>
+          <button onClick={handleRegister} disabled={!username}>Register</button>
+          <button onClick={handleLogin} disabled={!username}>Login</button>
           <p>{message}</p>
         </>
       )}

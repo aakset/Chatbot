@@ -1,61 +1,52 @@
-.chatbot-container {
-    max-width: 600px;
-    margin: 20px auto;
-  }
-  
-  .chatbot {
-    display: flex;
-    flex-direction: column;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    background-color: #fff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    height: 400px;
-    overflow-y: auto;
-  }
-  
-  .message {
-    margin: 10px;
-    padding: 15px;
-    border-radius: 8px;
-  }
-  
-  .user-message {
-    align-self: flex-end;
-    background-color: #3498db;
-    color: #fff;
-  }
-  
-  .bot-message {
-    align-self: flex-start;
-    background-color: #ecf0f1;
-    color: #333;
-  }
-  
-  .input-container {
-    display: flex;
-    margin-top: 10px;
-  }
-  
-  input[type="text"] {
-    flex: 1;
-    margin: 0 10px 0 0;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  
-  .clear-button {
-    padding: 10px;
-    background-color: #e74c3c;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .clear-button:hover {
-    background-color: #c0392b;
-  }
-  
+/* Login.css */
+
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.container {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+h2 {
+  color: #333;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  box-sizing: border-box;
+}
+
+button {
+  background-color: #00b906;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin: 5px;
+  font-size: 16px;
+}
+
+button:hover {
+  background-color: #007606;
+}
+
+p {
+  color: #dd1600;
+  margin-top: 10px;
+}
+
+

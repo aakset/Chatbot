@@ -4,10 +4,10 @@ import '../style/ChatCode.css';
 const Chatbot = ({user}) => {
   const [messages, setMessages] = useState([]);
   const chatContainerRef = useRef(null);
-  const [username, setUsername] = useState(user); // Set the username state
+  const [username, setUsername] = useState(user); 
 
   useEffect(() => {
-    // Scroll to bottom when new messages are added
+    // Automatisches "scrollen" bei neuen Nachrichten
     if (chatContainerRef.current) {
       chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
     }
@@ -15,7 +15,7 @@ const Chatbot = ({user}) => {
 
   const handleUserMessage = async (message) => {
     try {
-      // Save user message to the backend
+      // nachricht --> backend
       const response = await fetch('http://localhost:3001/saveChat', {
         method: 'POST',
         headers: {
@@ -24,11 +24,10 @@ const Chatbot = ({user}) => {
         body: JSON.stringify({ sender: username, message }),
       }).then((response) => response.json());
 
-      // Update the UI with the user's message
       const newMessage = { text: message, type: 'user' };
       setMessages((prevMessages) => [...prevMessages, newMessage]);
 
-      // Simulate bot response after a delay
+      // delay für bot (chammer lösche bruchts nöd)
       setTimeout(() => {
         let botResponse = response.bot
         const newMessage = { text: botResponse, type: 'bot' };
