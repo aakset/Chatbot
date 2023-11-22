@@ -19,6 +19,7 @@ db.on("error", (error) => {
 db.once("open", () => {
   console.log("Connected to MongoDB");
 });
+
 const userSchema = new mongoose.Schema({
   username: String,
   chats: [
@@ -45,14 +46,18 @@ app.post("/saveChat", async (req, res) => {
   const { sender, message } = req.body;
 
   try {
-    // findet benutzer durch username
+    if (message.toLowerCase() === 'about') {
+      return res.send(JSON.stringify({ success: true, message: "Redirecting to about page", bot: "" }));
+    }
+    if (message.toLowerCase() === 'log out') {
+      return res.send(JSON.stringify({ success: true, message: "Redirecting to log in page", bot: "" }));
+    }
+
     const user = await User.findOne({ username: sender }).exec();
 
-    //template for later
     if (user) {
       let chats = user.chats;
-
-      const botResponse = generateBotResponse()
+      const botResponse = generateBotResponse();
       const updateUser = await User.findOneAndUpdate(
         { username: sender },
         {
@@ -124,8 +129,23 @@ app.post("/login", async (req, res) => {
   }
 });
 
+app.post("/getchats", async (req,res) => {
+  const {username} = req.body;
+
+  const user = await User.findOne({ username: username }).exec();
+  if (user) {
+    let chats = user.chats
+    return res
+      .status(200)
+      .json({ success: true, message: "successfull", chats:chats });
+    
+  } else {
+    return res
+      .status(401)
+      .json({ success: false, message: "unsuccessfull" });
+  }
+})
+
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
-
-//ohne CORS gehts nicht!

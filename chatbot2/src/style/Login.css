@@ -1,20 +1,19 @@
-/* Login.css */
-
 body {
   font-family: 'Arial', sans-serif;
-  background-color: #f5f5f5;
+  background-color: #f4f4f4;
+  margin: 0;
+  padding: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   height: 100vh;
-  margin: 0;
 }
 
-.container {
+.login-container {
   background-color: #fff;
-  padding: 20px;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
   text-align: center;
 }
 
@@ -25,28 +24,36 @@ h2 {
 input {
   width: 100%;
   padding: 10px;
-  margin: 8px 0;
+  margin: 10px 0;
   box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 5px;
 }
 
 button {
-  background-color: #00b906;
+  width: 100%;
+  padding: 10px;
+  background-color: #0047ed;
   color: #fff;
-  padding: 10px 20px;
   border: none;
-  border-radius: 4px;
+  border-radius: 5px;
   cursor: pointer;
-  margin: 5px;
-  font-size: 16px;
-}
-
-button:hover {
-  background-color: #007606;
-}
-
-p {
-  color: #dd1600;
   margin-top: 10px;
 }
 
+button:hover {
+  background-color: #0031a4;
+}
 
+button:disabled {
+  background-color: #bdc3c7;
+  cursor: not-allowed;
+}
+
+p {
+  color: #e74c3c;
+}
+
+.error {
+  border-color: #e74c3c;
+}

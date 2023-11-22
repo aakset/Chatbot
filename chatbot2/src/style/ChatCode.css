@@ -1,24 +1,37 @@
 .chatbot-container {
   max-width: 600px;
   margin: 20px auto;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
 }
 
 .chatbot {
   display: flex;
   flex-direction: column;
   padding: 10px;
-  border: 1px solid #ccc;
-  border-radius: 8px;
-  background-color: #fff;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid #ccc;
   height: 400px;
   overflow-y: auto;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .message {
   margin: 10px;
   padding: 15px;
   border-radius: 8px;
+  animation: fadeIn 0.5s ease;
 }
 
 .user-message {
@@ -35,20 +48,24 @@
 
 .input-container {
   display: flex;
-  margin-top: 10px;
+  align-items: center;
+  padding: 10px;
+  border-top: 1px solid #ccc;
 }
 
 input[type="text"] {
   flex: 1;
-  margin: 0 10px 0 0;
+  margin-right: 10px;
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
 }
 
 .clear-button {
-  padding: 10px;
-  background-color: #e74c3c;
+  height: 37px;
+  width: 90px;
+  margin-bottom: 9px;
+  background-color: #d21500;
   color: #fff;
   border: none;
   border-radius: 5px;
@@ -56,5 +73,5 @@ input[type="text"] {
 }
 
 .clear-button:hover {
-  background-color: #c0392b;
+  background-color: #ad2617;
 }
