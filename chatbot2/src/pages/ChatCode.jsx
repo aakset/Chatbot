@@ -16,13 +16,13 @@ const Chatbot = ({user}) => {
   const handleUserMessage = async (message) => {
     try {
       // Save user message to the backend
-      await fetch('http://localhost:3001/saveChat', {
+      const response = await fetch('http://localhost:3001/saveChat', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ sender: username, message }),
-      });
+      }).then((response) => response.json());
 
       // Update the UI with the user's message
       const newMessage = { text: message, type: 'user' };
@@ -30,20 +30,15 @@ const Chatbot = ({user}) => {
 
       // Simulate bot response after a delay
       setTimeout(() => {
-        handleBotResponse();
+        let botResponse = response.bot
+        const newMessage = { text: botResponse, type: 'bot' };
+        setMessages((prevMessages) => [...prevMessages, newMessage]);
       }, 1000);
     } catch (error) {
       console.error('Error saving user message:', error);
     }
   };
 
-  const handleBotResponse = () => {
-    const responseOptions = ['Yes', 'No', 'Probably', 'I don\'t think so', 'Definitely', 'Maybe', 'Ask again later... I\'m busy contemplating'];
-    const randomIndex = Math.floor(Math.random() * responseOptions.length);
-    const botResponse = responseOptions[randomIndex];
-    const newMessage = { text: botResponse, type: 'bot' };
-    setMessages((prevMessages) => [...prevMessages, newMessage]);
-  };
 
   const handleClearChat = () => {
     setMessages([]);

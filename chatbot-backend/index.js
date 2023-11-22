@@ -12,12 +12,12 @@ mongoose.connect("mongodb://localhost:27017/chat-app", {
 });
 const db = mongoose.connection;
 
-db.on('error', (error) => {
-  console.error('MongoDB connection error:', error);
+db.on("error", (error) => {
+  console.error("MongoDB connection error:", error);
 });
 
-db.once('open', () => {
-  console.log('Connected to MongoDB');
+db.once("open", () => {
+  console.log("Connected to MongoDB");
 });
 const userSchema = new mongoose.Schema({
   username: String,
@@ -31,7 +31,6 @@ const userSchema = new mongoose.Schema({
 
 const User = db.model("users", userSchema);
 
-
 app.use(bodyParser.json());
 app.use(cors());
 app.use((req, res, next) => {
@@ -40,29 +39,37 @@ app.use((req, res, next) => {
   next();
 });
 
-const db_user = new User()
-
+const db_user = new User();
 
 app.post("/saveChat", async (req, res) => {
   const { sender, message } = req.body;
 
   try {
     // findet benutzer durch username
-    const user = await User.findOne({username: sender}).exec()
-
+    const user = await User.findOne({ username: sender }).exec();
 
     //template for later
     if (user) {
-      let chats = user.chats
-      const updateUser = User.findOneAndUpdate({username: sender}, {chats: [...chats, {sender, message}]}).exec()
+      let chats = user.chats;
 
-      return res
-        .status(200)
-        .json({ success: true, message: "Chat saved successfully" });
+      const botResponse = generateBotResponse()
+      const updateUser = await User.findOneAndUpdate(
+        { username: sender },
+        {
+          chats: [
+            ...chats,
+            { sender: sender, message: message },
+            { sender: "bot", message: botResponse },
+          ],
+        },
+        { new: true }
+      ).exec();
+
+      return res.send(JSON.stringify({ success: true, message: "Chat saved successfully", bot: botResponse }))
     } else {
       return res
         .status(404)
-        .json({ success: false, message: "User not found" });
+        .json({ success: false, message: "User not found", bot: "" });
     }
   } catch (error) {
     console.error("Error during chat saving:", error);
@@ -72,24 +79,30 @@ app.post("/saveChat", async (req, res) => {
   }
 });
 
+const generateBotResponse = () => {
+  const responseOptions = ['Yes', 'No', 'Probably', 'I don\'t think so', 'Definitely', 'Maybe', 'Ask again later... I\'m busy contemplating'];
+  const randomIndex = Math.floor(Math.random() * responseOptions.length);
+  return responseOptions[randomIndex];
+};
+
 const users = [];
 
 app.post("/register", async (req, res) => {
   const { username } = req.body;
-try{
-    const user = await User.findOne({username: username}).exec()
-  if (user) {
-    return res
-      .status(400)
-      .json({ success: false, message: "Username already taken" });
-  } else {
-    db_user.username = username;
-    await db_user.save()
-    return res
-      .status(201)
-      .json({ success: true, message: "User registered successfully" });
-  }} catch (error) {
-    
+  try {
+    const user = await User.findOne({ username: username }).exec();
+    if (user) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Username already taken" });
+    } else {
+      db_user.username = username;
+      await db_user.save();
+      return res
+        .status(201)
+        .json({ success: true, message: "User registered successfully" });
+    }
+  } catch (error) {
     return res
       .status(500)
       .json({ success: false, message: "Something went wrong" });
@@ -99,7 +112,7 @@ try{
 app.post("/login", async (req, res) => {
   const { username } = req.body;
 
-    const user = await User.findOne({username: username}).exec()
+  const user = await User.findOne({ username: username }).exec();
   if (user) {
     return res
       .status(200)
@@ -114,6 +127,5 @@ app.post("/login", async (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
-
 
 //ohne CORS gehts nicht!
