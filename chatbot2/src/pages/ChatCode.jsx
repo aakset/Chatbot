@@ -42,7 +42,7 @@ const Chatbot = ({ user }) => {
         return;
       }
 
-      if (message.toLowerCase() === 'log out') {
+      if (message.toLowerCase() === 'login') {
         window.location.href = '/login'; 
         return;
       }
@@ -52,17 +52,17 @@ const Chatbot = ({ user }) => {
         return;
       }
 
-      if (message.toLowerCase() === "open netflix") {
+      if (message.toLowerCase().includes("netflix")) {
         window.open('https://www.netflix.com/login', "_blank"); 
         return;
       }
 
-      if (message.toLowerCase() === "open wikipedia") {
+      if (message.toLowerCase().includes("wikipedia")) {
         window.open('https://www.wikipedia.org/', "_blank"); 
         return;
       }
 
-      if (message.toLowerCase() === "open youtube") {
+      if (message.toLowerCase().includes("youtube")) {
         window.open('https://www.youtube.com/', "_blank"); 
         return;
       }
