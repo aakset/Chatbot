@@ -52,12 +52,37 @@ app.post("/saveChat", async (req, res) => {
     if (message.toLowerCase() === 'log out') {
       return res.send(JSON.stringify({ success: true, message: "Redirecting to log in page", bot: "" }));
     }
+    if (message.toLowerCase() === "what's your favorite song?") {
+      return res.send(JSON.stringify({ success: true, message: "Redirecting to YouTube", bot: "" }));
+    }
+    if (message.toLowerCase() === "open netflix") {
+      return res.send(JSON.stringify({ success: true, message: "Redirecting to Netflix", bot: "" }));
+    }
+    if (message.toLowerCase() === "open netflix") {
+      return res.send(JSON.stringify({ success: true, message: "Redirecting to Wikipedia", bot: "" }));
+    }
+    if (message.toLowerCase() === "open netflix") {
+      return res.send(JSON.stringify({ success: true, message: "Redirecting to Youtube", bot: "" }));
+    }
+    if (message.toLowerCase() === "open random site") {
+      const randomSites = [
+        'https://chat.openai.com/',
+          'https://updatefaker.com/windows11/index.html',
+          'https://www.instagram.com/aakashsonics/',
+          'https://web.whatsapp.com/',
+          'https://trello.com/b/V7SBUlFh/school-everyday',
+          'https://www.icloud.com/notes/021Cz80HGF0KKVGBusbJT4Qpg'
+      ];
+      const randomIndex = Math.floor(Math.random() * randomSites.length);
+      const randomSite = randomSites[randomIndex];
+      return res.send(JSON.stringify({ success: true, message: `Opening random site: ${randomSite}`, bot: "" }));
+    }
 
     const user = await User.findOne({ username: sender }).exec();
 
     if (user) {
       let chats = user.chats;
-      const botResponse = generateBotResponse();
+      const botResponse = generateBotResponse(message);
       const updateUser = await User.findOneAndUpdate(
         { username: sender },
         {
@@ -84,11 +109,43 @@ app.post("/saveChat", async (req, res) => {
   }
 });
 
-const generateBotResponse = () => {
+
+const generateBotResponse = (message) => {
   const responseOptions = ['Yes', 'No', 'Probably', 'I don\'t think so', 'Definitely', 'Maybe', 'Ask again later... I\'m busy contemplating'];
+
+  if (message.toLowerCase().includes("how are you?")) {
+    return "For a bot, pretty good...";
+  }
+
+  if (message.toLowerCase().includes("are you gay?")) {
+    return "Tschorry? Nö... ganz freche aff.";
+  }
+
+  if (message.toLowerCase().includes("abi")) {
+    return "bodelos..";
+  }
+
+  if (message.toLowerCase().includes("weather")) {
+    return "I'd tell you if I knew...";
+  }
+
+  if (message.toLowerCase().includes("favorite song?")) {
+    return "Check it out!";
+  }
+
+  if (message.toLowerCase().includes("sites?")) {
+    return "Yes! some, but not all. Try it :)";
+  }
+
+  if (message.toLowerCase().includes("ate")) {
+    return "and left no crumbs...";
+  }
+  
+
   const randomIndex = Math.floor(Math.random() * responseOptions.length);
   return responseOptions[randomIndex];
 };
+
 
 const users = [];
 

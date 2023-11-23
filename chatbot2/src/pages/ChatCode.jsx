@@ -29,6 +29,7 @@ const Chatbot = ({ user }) => {
     getData()
   },[user])
 
+
   const handleUserMessage = async (message) => {
     try {
       if (message.toLowerCase() === 'about') {
@@ -38,6 +39,45 @@ const Chatbot = ({ user }) => {
 
       if (message.toLowerCase() === 'log out') {
         window.location.href = '/login'; 
+        return;
+      }
+
+      if (message.toLowerCase() === 'log out') {
+        window.location.href = '/login'; 
+        return;
+      }
+
+      if (message.toLowerCase().includes("favorite song?")) {
+        window.open('https://www.youtube.com/watch?v=1kQyZ9cD6Z8', "_blank"); 
+        return;
+      }
+
+      if (message.toLowerCase() === "open netflix") {
+        window.open('https://www.netflix.com/login', "_blank"); 
+        return;
+      }
+
+      if (message.toLowerCase() === "open wikipedia") {
+        window.open('https://www.wikipedia.org/', "_blank"); 
+        return;
+      }
+
+      if (message.toLowerCase() === "open youtube") {
+        window.open('https://www.youtube.com/', "_blank"); 
+        return;
+      }
+      if (message.toLowerCase().includes("random")) {
+        const randomSites = [
+          'https://chat.openai.com/',
+          'https://updatefaker.com/windows11/index.html',
+          'https://www.instagram.com/aakashsonics/',
+          'https://web.whatsapp.com/',
+          'https://trello.com/b/V7SBUlFh/school-everyday',
+          'https://www.icloud.com/notes/021Cz80HGF0KKVGBusbJT4Qpg'
+        ];
+        const randomIndex = Math.floor(Math.random() * randomSites.length);
+        const randomSite = randomSites[randomIndex];
+        window.open(randomSite, "_blank");
         return;
       }
 
